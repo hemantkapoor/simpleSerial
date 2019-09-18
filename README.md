@@ -1,36 +1,30 @@
 # Simple Serial Comms
 
-Simple Serial Comms is a C++ 11 utility project which if included in a programe, spawns a thread to read serial raw data and sends data via callback.
+Simple Serial Comms is a C++ 11 utility project which if included in a program, spawns a thread to read serial raw data and sends data via callback.
 It also provides interface to transmit data
-
-## Installation
-
-It has its own cmake blah blah.
-
 
 ## Usage
 
 Simply clone the respository as a submodule into your project.
 
-For 
-```bash
-./bin/simpleSerialComms
-```
+'''
+git submodule add https://github.com/hemantkapoor/simpleSerial.git
+'''
+
+It has its own CMakeLists.txt. To include in a main project, add following lines presuming that simpleSerial is present at "src/simpleSerial" driectory
+
+'''
+add_library(SimpleSerial "")
+add_subdirectory(src/simpleSerial)
+'''
 
 ## TEST
 
-You can create virtual serial port by using
- 
-```bash
-socat -d -d pty,raw,echo=0 pty,raw,echo=0
-```
+Simply clone the simpleSerialTest git repository and follow the instructions
 
-and use minicom to interact and test
- 
-```bash
-minicom -D /dev/pts/<port number> 
-```
-
+'''
+git clone https://github.com/hemantkapoor/simpleSerialTest.git
+'''
 
 ## Upcoming changes
 
