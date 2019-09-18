@@ -13,10 +13,11 @@
 #include <termios.h> /* POSIX terminal control definitions */
 #include <thread>
 #include <chrono>
+#include "../callback/BaseCallback.h"
 #include "../utility/Utility.h"
 #include "Comms.h"
 
-using namespace CommsName;
+using namespace SimpleSerialName;
 
 Comms::Comms(const std::string& path):m_path(path)
 {
@@ -105,10 +106,18 @@ void Comms::processRead()
 	{
 		//For now just read the data and sleep
 		auto nbytes = read(m_fileDescriptor,m_rxMessage,MAX_MESSGE_LENGTH);
+
 		if(nbytes > 0)
 		{
-			auto dataString = Utility::hexStr(m_rxMessage,nbytes);
-			std::cout<<__PRETTY_FUNCTION__<<" : "<<dataString<<std::endl;
+			std::vector<uint8_t> serialData;
+			std::copy( m_rxMessage, m_rxMessage + nbytes, std::back_inserter(serialData));
+			//Now perform callback
+			for(auto currentIterator : m_callBackList)
+			{
+				currentIterator->callback(serialData);
+			}
+			//auto dataString = Utility::hexStr(m_rxMessage,nbytes);
+			//std::cout<<__PRETTY_FUNCTION__<<" : "<<dataString<<std::endl;
 		}
 		//Read every 500 milliseconds
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));

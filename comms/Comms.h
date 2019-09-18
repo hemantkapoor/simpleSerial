@@ -9,15 +9,19 @@
 #define COMMS_COMMS_H_
 
 #include <string>
+#include <memory>
 #include <vector>
+#include <algorithm>
 #include <stdint.h>
 
-namespace CommsName
+namespace SimpleSerialName
 {
 	const uint32_t MAX_MESSGE_LENGTH = 500;
-};
 
-class Comms {
+class BaseCallback;
+
+class Comms
+{
 public:
 	Comms() = delete;
 	Comms(const std::string& path);
@@ -27,6 +31,11 @@ public:
 	void processRead();
 	bool transmitData(std::vector<uint8_t>& data);
 	void stopRead() { m_stopRead = true; }
+	void addCallback(std::shared_ptr<BaseCallback> newCallBack) { m_callBackList.push_back(newCallBack);}
+	void removeCallback(std::shared_ptr<BaseCallback> newCallBack)
+	{
+		m_callBackList.erase(std::remove(begin(m_callBackList), end(m_callBackList), newCallBack), end(m_callBackList));
+	}
 
 private:
 	std::string m_path;
@@ -34,7 +43,10 @@ private:
 	bool m_stopRead = false;
 	int m_fileDescriptor = -1;
 
-	uint8_t m_rxMessage[CommsName::MAX_MESSGE_LENGTH];
+	uint8_t m_rxMessage[MAX_MESSGE_LENGTH];
+	std::vector<std::shared_ptr<BaseCallback>> m_callBackList;
 };
+
+};//End of namespace
 
 #endif /* COMMS_COMMS_H_ */

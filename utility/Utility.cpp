@@ -7,7 +7,7 @@
 
 #include "Utility.h"
 
-using namespace UtilityName;
+using namespace SimpleSerialName;
 
 std::string Utility::hexStr(uint8_t *data, int len)
 {
