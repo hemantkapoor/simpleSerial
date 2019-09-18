@@ -111,6 +111,7 @@ void Comms::processRead()
 		{
 			std::vector<uint8_t> serialData;
 			std::copy( m_rxMessage, m_rxMessage + nbytes, std::back_inserter(serialData));
+			std::lock_guard<std::mutex> guard(m_callBackListMutex);
 			//Now perform callback
 			for(auto currentIterator : m_callBackList)
 			{

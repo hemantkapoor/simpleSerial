@@ -8,11 +8,12 @@
 #ifndef COMMS_COMMS_H_
 #define COMMS_COMMS_H_
 
+#include <stdint.h>
 #include <string>
 #include <memory>
 #include <vector>
 #include <algorithm>
-#include <stdint.h>
+#include <mutex>
 
 namespace SimpleSerialName
 {
@@ -31,9 +32,14 @@ public:
 	void processRead();
 	bool transmitData(std::vector<uint8_t>& data);
 	void stopRead() { m_stopRead = true; }
-	void addCallback(std::shared_ptr<BaseCallback> newCallBack) { m_callBackList.push_back(newCallBack);}
+	void addCallback(std::shared_ptr<BaseCallback> newCallBack)
+	{
+		std::lock_guard<std::mutex> guard(m_callBackListMutex);
+		m_callBackList.push_back(newCallBack);
+	}
 	void removeCallback(std::shared_ptr<BaseCallback> newCallBack)
 	{
+		std::lock_guard<std::mutex> guard(m_callBackListMutex);
 		m_callBackList.erase(std::remove(begin(m_callBackList), end(m_callBackList), newCallBack), end(m_callBackList));
 	}
 
@@ -45,6 +51,7 @@ private:
 
 	uint8_t m_rxMessage[MAX_MESSGE_LENGTH];
 	std::vector<std::shared_ptr<BaseCallback>> m_callBackList;
+	std::mutex m_callBackListMutex;
 };
 
 };//End of namespace
