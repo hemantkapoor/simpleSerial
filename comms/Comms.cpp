@@ -28,6 +28,8 @@ Comms::~Comms()
 	std::cout<< __PRETTY_FUNCTION__ << " : Closing Serial port\r\n";
 	if(m_commPortOpen == true)
 	{
+		m_stopRead = true;
+		m_thread->join();
 		m_commPortOpen = false;
 		close(m_fileDescriptor);
 	}
@@ -93,6 +95,10 @@ bool Comms::startComms()
 	 */
 
 	tcsetattr(m_fileDescriptor, TCSANOW, &options);
+
+	//Start Receive thread
+	m_stopRead = false;
+	m_thread = std::make_unique<std::thread>(&SimpleSerialName::Comms::processRead, this);
 
 	m_commPortOpen = true;
 

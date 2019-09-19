@@ -29,9 +29,7 @@ public:
 	virtual ~Comms();
 
 	bool startComms();
-	void processRead();
 	bool transmitData(std::vector<uint8_t>& data);
-	void stopRead() { m_stopRead = true; }
 	void addCallback(std::shared_ptr<BaseCallback> newCallBack)
 	{
 		std::lock_guard<std::mutex> guard(m_callBackListMutex);
@@ -48,10 +46,12 @@ private:
 	bool m_commPortOpen = false;
 	bool m_stopRead = false;
 	int m_fileDescriptor = -1;
+	void processRead();
 
 	uint8_t m_rxMessage[MAX_MESSGE_LENGTH];
 	std::vector<std::shared_ptr<BaseCallback>> m_callBackList;
 	std::mutex m_callBackListMutex;
+	std::unique_ptr<std::thread> m_thread;
 };
 
 };//End of namespace
