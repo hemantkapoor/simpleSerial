@@ -131,7 +131,7 @@ void Comms::processRead()
 	}
 }
 
-bool Comms::transmitData(std::vector<uint8_t>& data)
+bool Comms::transmitData(const std::vector<uint8_t> data)
 {
 	if(m_commPortOpen == false)	{ return false; }
 	auto dataWritten = write(m_fileDescriptor,data.data(), data.size());

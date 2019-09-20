@@ -23,7 +23,7 @@ public:
 	Utility& operator=(const Utility& ) = delete;
 	Utility (const Utility &) = delete;
 	~Utility() = delete;
-	static std::string hexStr(uint8_t *data, int len);
+	static std::string hexStr(const uint8_t *data, int len);
 };
 
 };//End of namespace

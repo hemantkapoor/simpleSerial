@@ -9,7 +9,7 @@
 
 using namespace SimpleSerialName;
 
-std::string Utility::hexStr(uint8_t *data, int len)
+std::string Utility::hexStr(const uint8_t *data, int len)
 {
   std::string s(len * 2, ' ');
   for (int i = 0; i < len; ++i) {

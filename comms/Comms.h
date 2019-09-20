@@ -30,7 +30,7 @@ public:
 	virtual ~Comms();
 
 	bool startComms();
-	bool transmitData(std::vector<uint8_t>& data);
+	bool transmitData(const std::vector<uint8_t> data);
 	void addCallback(std::shared_ptr<BaseCallback> newCallBack)
 	{
 		std::lock_guard<std::mutex> guard(m_callBackListMutex);
