@@ -47,7 +47,7 @@ bool Comms::startComms()
 
 	if(m_fileDescriptor == -1)
 	{
-		m_debug->log(SimpleDebugName::CRITICAL_ERROR, std::string(__PRETTY_FUNCTION__) + "");
+		m_debug->log(SimpleDebugName::CRITICAL_ERROR, std::string(__PRETTY_FUNCTION__) + " : Error to open serial port");
 		return false;
 	}
 
