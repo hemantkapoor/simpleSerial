@@ -6,7 +6,6 @@
  *
  *      Read https://www.cmrr.umn.edu/~strupp/serial.html#2_5
  */
-#include <iostream>
 #include <unistd.h>  /* UNIX standard function definitions */
 #include <fcntl.h>   /* File control definitions */
 #include <errno.h>   /* Error number definitions */
@@ -14,18 +13,19 @@
 #include <thread>
 #include <chrono>
 #include "../callback/BaseCallback.h"
-#include "../utility/Utility.h"
+#include "../../simpleDebug/SimpleDebug.h"
 #include "Comms.h"
 
 using namespace SimpleSerialName;
 
 Comms::Comms(const std::string& path):m_path(path)
 {
+	m_debug = SimpleDebugName::SimpleDebug::instance();
 }
 
 Comms::~Comms()
 {
-	std::cout<< __PRETTY_FUNCTION__ << " : Closing Serial port\r\n";
+	m_debug->log(SimpleDebugName::LOG, std::string(__PRETTY_FUNCTION__) + " : Closing Serial port\r\n");
 	if(m_commPortOpen == true)
 	{
 		m_stopRead = true;
@@ -47,7 +47,7 @@ bool Comms::startComms()
 
 	if(m_fileDescriptor == -1)
 	{
-		std::cout<< __PRETTY_FUNCTION__ << " : Cannot open comm port\r\n";
+		m_debug->log(SimpleDebugName::CRITICAL_ERROR, std::string(__PRETTY_FUNCTION__) + "");
 		return false;
 	}
 
@@ -56,7 +56,7 @@ bool Comms::startComms()
 
 	//If everything works then we start a new thread that will read serial port
 
-	std::cout<< __PRETTY_FUNCTION__ << " : Serial Port " << m_path << " open \r\n";
+	m_debug->log(SimpleDebugName::LOG, std::string(__PRETTY_FUNCTION__) + " : Serial Port " + m_path + " open \r\n");
 
 	termios options;
 	tcgetattr(m_fileDescriptor, &options);
@@ -123,8 +123,6 @@ void Comms::processRead()
 			{
 				currentIterator->callback(serialData);
 			}
-			//auto dataString = Utility::hexStr(m_rxMessage,nbytes);
-			//std::cout<<__PRETTY_FUNCTION__<<" : "<<dataString<<std::endl;
 		}
 		//Read every 500 milliseconds
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));

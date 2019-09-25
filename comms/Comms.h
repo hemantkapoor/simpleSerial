@@ -16,6 +16,11 @@
 #include <mutex>
 #include <thread>
 
+namespace SimpleDebugName
+{
+	class SimpleDebug;
+};
+
 namespace SimpleSerialName
 {
 	const uint32_t MAX_MESSGE_LENGTH = 500;
@@ -53,6 +58,7 @@ private:
 	std::vector<std::shared_ptr<BaseCallback>> m_callBackList;
 	std::mutex m_callBackListMutex;
 	std::unique_ptr<std::thread> m_thread;
+	SimpleDebugName::SimpleDebug* m_debug;
 };
 
 };//End of namespace
