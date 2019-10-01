@@ -26,19 +26,6 @@ public:
 	Utility (const Utility &) = delete;
 	~Utility() = delete;
 	static std::string hexStr(const uint8_t *data, int len);
-	template<typename baseType, typename derivedType>
-	static std::unique_ptr<derivedType> dynamicConvert(std::unique_ptr<baseType> baseObj)
-	{
-		auto tmp = dynamic_cast<derivedType*>(baseObj.get());
-		std::unique_ptr<derivedType> derivedPointer;
-		if(tmp != nullptr)
-		{
-			baseObj.release();
-		    derivedPointer.reset(tmp);
-		}
-		return derivedPointer;
-	}
-
 	static std::vector<uint16_t> convertU8toU16(const std::vector<uint8_t>&);
 };
 
